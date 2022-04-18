@@ -1,0 +1,87 @@
+﻿@model NinjaHeaven.Models.User
+
+@{ ViewData["Title"] = "User Profile"; }
+
+<h1 class="text-center">@ViewData["Title"]</h1>
+
+@if (Model.Gender == "Male")
+{
+    <img class="profile" src="https://dotown.maeda-design-room.net/wp-content/uploads/2022/03/person_ninja_01.png">
+}
+else
+{
+    <img class="profile" src="https://dotown.maeda-design-room.net/wp-content/uploads/2022/03/person_ninja_02.png">
+}
+
+<hr class="my-4" />
+
+<dl class="row">
+    <dt class="col-6 text-right">
+        @Html.DisplayNameFor(model => model.Name)
+    </dt>
+    <dd class="col-6 text-left">
+        @Html.DisplayFor(model => model.Name)
+    </dd>
+    <dt class="col-6 text-right">
+        @Html.DisplayNameFor(model => model.Email)
+    </dt>
+    <dd class="col-6 text-left">
+        @Html.DisplayFor(model => model.Email)
+    </dd>
+    <dt class="col-6 text-right">
+        @Html.DisplayNameFor(model => model.Wallet)
+    </dt>
+    <dd class="col-6 text-left">
+        $ @Html.DisplayFor(model => model.Wallet)
+    </dd>
+    <dt class="col-6 text-right">
+        @Html.DisplayNameFor(model => model.CreatedDate)
+    </dt>
+    <dd class="col-6 text-left">
+        @Html.DisplayFor(model => model.CreatedDate)
+    </dd>
+</dl>
+
+
+<div class="options">
+    <a asp-controller="UserEquipment" asp-action="Index"><i class="fa-solid fa-box-archive"></i> Storage</a> ｜
+    <a asp-action="Edit" asp-route-id="@Model.Id"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+</div>
+
+
+@if (ViewData["Message"] != null)
+{  
+    <script>  
+        window.onload = function () {  
+            alert("@ViewData["Message"]");  
+        };  
+    </script>  
+}  
+
+<style>
+    .profile {
+        display: block;
+        margin: 0 auto;
+        padding: 4px;
+        border: 2px solid black;
+        border-radius: 50%;
+        width: 100px;
+    }
+    .options {
+        margin-top: 16px;
+        text-align: center;
+    }
+    a + a {
+        margin-left: 12px;
+    }
+    .row {
+        margin: 0 auto;
+        width: 50%;
+    }
+
+    dt, dd {
+        margin: 0;
+        height: 50px;
+        line-height: 50px;
+    }
+</style>

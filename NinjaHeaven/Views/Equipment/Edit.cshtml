@@ -1,0 +1,58 @@
+﻿@model NinjaHeaven.Models.Equipment
+
+@{ ViewData["Title"] = "Edit Equipment"; }
+
+<div class="middleCenter">
+    <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+    <form asp-action="Edit" class="mx-auto">
+        <input type="hidden" asp-for="CreatedDate" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label required"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="control-label"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Price" class="control-label required"></label>
+            <input type="number" min="0" max="1000" asp-for="Price" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ImgUrl" class="control-label required">Image Url</label>
+            <input id="imgUrl" type="url" asp-for="ImgUrl" class="form-control" />
+            <span asp-validation-for="ImgUrl" class="text-danger"></span>
+            <img id="img" class="d-block mx-auto mt-4 preview" onerror="this.src = 'https://cdn-icons.flaticon.com/png/512/2797/premium/2797387.png?token=exp=1650011768~hmac=a74d6b797c55a79c5e538d38e87035ef'" alt="preview"/>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary mt-3" />
+        </div>
+    </form>
+</div>
+
+<script>
+    const img = document.getElementById('img');
+    const imgUrl = document.getElementById('imgUrl');
+
+    img.src = imgUrl.value;
+    imgUrl.addEventListener('input', (el) =>
+        img.src = el.target.value
+    )
+</script>
+
+<style>
+    .preview {
+        padding: 12px;
+        border: 1px solid black;
+        border-radius: 5px;
+        width: 25%;
+    }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,78 @@
+﻿@model NinjaHeaven.Models.UserEquipment
+
+@{ ViewData["Title"] = $"出售 { Model.Equipment.Name }"; }
+
+<div class="middleCenter">
+    <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+    <div class="img">
+        <img src="@Model.Equipment.ImgUrl" alt="@Model.Equipment.Name" />
+    </div>
+    <p class="text-center">@Model.Equipment.Description</p>
+    <p class="text-center price">$ @Model.Equipment.Price</p>
+    <p class="text-center">Stock: @Model.Amount</p>
+
+    <form asp-action="Sell" class="mx-auto">
+        <input type="hidden" asp-for="UserId" />
+        <input type="hidden" asp-for="EquipmentId" />
+        <input type="hidden" asp-for="Equipment.Name" />
+        <input type="hidden" asp-for="Equipment.ImgUrl" />
+        <input type="hidden" asp-for="Equipment.Description" />
+        <input type="hidden" asp-for="Equipment.Price" />
+        <input type="hidden" asp-for="User.Wallet" />
+
+        <div class="form-group">
+            <label asp-for="Amount" class="control-label required"></label>
+            <input id="amount" type="number" min="1" max="1000" asp-for="Amount" class="form-control" />
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+        <p id="total" class="text-center"></p>
+        <div class="form-group">
+            <input type="submit" value="Sell" class="btn btn-primary mt-3" />
+        </div>
+    </form>
+
+    <div class="mx-auto">
+        <a asp-action="Shop">< Back to Shop</a>
+    </div>
+</div>
+
+<script>
+    const total = document.getElementById('total');
+    const amount = document.getElementById('amount');
+
+    total.innerText = `Total: $ ${ amount.value * @Model.Equipment.Price }`;
+    amount.addEventListener('input', el =>
+        total.innerText = `Total: $ ${ amount.value * @Model.Equipment.Price }`
+    )
+</script>
+
+<style>
+    .middleCenter {
+        margin: 0 auto;
+        width: 50%;
+    }
+
+    .price {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .img {
+        margin: 0 auto 24px auto;
+        border: 2px solid black;
+        width: 200px;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    img {
+        max-width: 180px;
+        max-height: 180px;
+    }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

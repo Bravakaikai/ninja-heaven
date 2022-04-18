@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Ninja Heaven";
+}
+
+<div class="middleCenter text-center">
+    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Let's Play Game!</h1>
+
+    <div class="mt-3">
+        <img class="rotate" src="https://dotown.maeda-design-room.net/wp-content/uploads/2022/03/person_ninja_01.png" alt="people" />
+        @if (TempData["Role"] == null)
+        {
+            <a class="btn btn-primary" asp-controller="User" asp-action="Login">Start</a>
+
+        }
+        else
+        {
+            <a class="btn btn-primary" asp-controller="User" asp-action="Info">Start</a>
+        }
+        <img class="girl" src="https://dotown.maeda-design-room.net/wp-content/uploads/2022/03/person_ninja_02.png" alt="people" />
+    </div>
+</div>
+
+<style>
+    .btn {
+        width: 25%;
+        font-size: 20px;
+    }
+    img {
+        margin: 0 8px;
+        width: 50px;
+    }
+    .rotate {
+        transform: rotateY(180deg);
+    }
+</style>

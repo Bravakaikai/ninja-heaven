@@ -1,0 +1,53 @@
+﻿@model IEnumerable<NinjaHeaven.Models.Equipment>
+
+@{ ViewData["Title"] = "Shop"; }
+
+<h1 class="text-center">Equipment @ViewData["Title"]</h1>
+
+<p class="text-center">
+    <a asp-action="Index"><i class="fa-solid fa-box-archive"></i>  Go to Storage</a>
+</p>
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-3">
+                <div class="card">
+                    <img src="@item.ImgUrl" class="card-img-top equipmentImg" alt="@item.Name">
+                    <hr />
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text mb-0">@item.Description</p>
+                        <p class="price text-primary">$ @item.Price</p>
+                        <a class="btn btn-primary" asp-action="Buy" asp-route-id="@item.Id">Buy</a>
+                    </div>
+                </div>
+            </div>
+         }
+    </div>
+</div>
+
+<style>
+    .card {
+        margin-bottom: 16px;
+    }
+    .equipmentImg {
+        margin: 20px auto 0 auto;
+        max-width: 100px;
+        height: 100px;
+    }
+    .card-text {
+        overflow-y: hidden;
+        height: 30px;
+    }
+    .price {
+        text-align: right;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .btn {
+        display: block;
+    }
+</style>
+

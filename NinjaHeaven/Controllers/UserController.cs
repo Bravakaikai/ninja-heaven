@@ -59,6 +59,11 @@ namespace NinjaHeaven.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            if (id != HttpContext.Session.GetInt32("UserId"))
+            {
+                ViewData["Storage"] = "Hide";
+            }
+
             return View(user);
         }
 

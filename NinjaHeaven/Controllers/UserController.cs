@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ namespace NinjaHeaven.Controllers
 {
     public class UserController : Controller
     {
-        public User currentUser;
+        private User currentUser;
 
         private readonly NinjaHeavenDbContext _context;
 
@@ -57,11 +58,6 @@ namespace NinjaHeaven.Controllers
             {
                 TempData["Error"] = "User not found!";
                 return RedirectToAction("Index", "Home");
-            }
-
-            if (id != HttpContext.Session.GetInt32("UserId"))
-            {
-                ViewData["Storage"] = "Hide";
             }
 
             return View(user);

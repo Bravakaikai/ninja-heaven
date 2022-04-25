@@ -44,11 +44,6 @@ else
 
 
 <div class="options">
-    @if ((string)ViewData["Storage"] != "Hide")
-    {
-        <a asp-controller="UserEquipment" asp-action="Index"><i class="fa-solid fa-box-archive"></i> Storage</a>
-        <span> ｜ </span>
-    }
     <a asp-action="Edit" asp-route-id="@Model.Id"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
 </div>
 

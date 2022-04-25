@@ -26,9 +26,11 @@
     <None Remove="Microsoft.AspNetCore.Session" />
     <None Remove="Twileloop.ExpressSecurity" />
     <None Remove="Service\" />
+    <None Remove="Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\UserEquipment\" />
     <Folder Include="Services\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>

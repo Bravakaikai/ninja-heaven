@@ -1,54 +1,65 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using NinjaHeaven.Models;
-using NinjaHeaven.Services;
 
-public class NinjaHeavenDbContext : DbContext
+namespace NinjaHeaven.Services
+{
+    public class DbManagementService
     {
-        public NinjaHeavenDbContext(DbContextOptions<NinjaHeavenDbContext> options)
-            : base(options)
+        public static void MigrationInitialize(IApplicationBuilder app)
         {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                scope.ServiceProvider.GetService<NinjaHeavenDbContext>().Database.Migrate();
+            }
         }
 
-        public DbSet<NinjaHeaven.Models.User> User { get; set; }
-        public DbSet<NinjaHeaven.Models.Equipment> Equipment { get; set; }
-        public DbSet<NinjaHeaven.Models.UserEquipment> UserEquipment { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public static void SeedData(IApplicationBuilder app)
         {
-            modelBuilder.Entity("NinjaHeaven.Models.User")
-                        .HasData(
-                            new User
-                            {
-                                Id = 1,
-                                Name = "Kelly",
-                                Email = "kelly@gmail.com",
-                                Password = EncryptionService.Encrypt("123456"),
-                                Gender = "Female",
-                                Role = "Admin",
-                                Wallet = 1000,
-                                CreatedDate = DateTime.UtcNow.AddHours(8),
-                                UpdatedDate = DateTime.UtcNow.AddHours(8)
-                            },
-                            new User
-                            {
-                                Id = 2,
-                                Name = "Kevin",
-                                Email = "kevin@gmail.com",
-                                Password = EncryptionService.Encrypt("123456"),
-                                Gender = "Male",
-                                Role = "Player",
-                                Wallet = 1000,
-                                CreatedDate = DateTime.UtcNow.AddHours(8),
-                                UpdatedDate = DateTime.UtcNow.AddHours(8)
-                            }
-                        );
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                using (var context = new NinjaHeavenDbContext(
+                    scope.ServiceProvider.GetRequiredService<DbContextOptions<NinjaHeavenDbContext>>()))
+                {
+                    // Look for any Users.
+                    if (!context.User.Any())
+                    {
+                        context.User.AddRange(
+                        new User
+                        {
+                            Id = 1,
+                            Name = "Kelly",
+                            Email = "kelly@gmail.com",
+                            Password = EncryptionService.Encrypt("123456"),
+                            Gender = "Female",
+                            Role = "Admin",
+                            Wallet = 1000,
+                            CreatedDate = DateTime.UtcNow.AddHours(8),
+                            UpdatedDate = DateTime.UtcNow.AddHours(8)
+                        },
+                        new User
+                        {
+                            Id = 2,
+                            Name = "Kevin",
+                            Email = "kevin@gmail.com",
+                            Password = EncryptionService.Encrypt("123456"),
+                            Gender = "Male",
+                            Role = "Player",
+                            Wallet = 1000,
+                            CreatedDate = DateTime.UtcNow.AddHours(8),
+                            UpdatedDate = DateTime.UtcNow.AddHours(8)
+                        }
+                    );
+                        context.SaveChanges();
+                    }
 
-            modelBuilder.Entity("NinjaHeaven.Models.Equipment")
-                        .HasData(
+                    //Look for any Equipments.
+                    if (!context.Equipment.Any())
+                    {
+                        context.Equipment.AddRange(
                             new Equipment
                             {
                                 Id = 1,
@@ -150,10 +161,10 @@ public class NinjaHeavenDbContext : DbContext
                                 UpdatedDate = DateTime.UtcNow.AddHours(8)
                             }
                         );
-
-            modelBuilder.Entity("NinjaHeaven.Models.UserEquipment", b =>
-            {
-                b.HasKey("EquipmentId", "UserId");
-            });
+                        context.SaveChanges();
+                    }
+                }
+            }
+        }
     }
 }

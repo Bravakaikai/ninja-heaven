@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using NinjaHeaven.Services;
 
 namespace NinjaHeaven
 {
@@ -30,15 +31,19 @@ namespace NinjaHeaven
 
             services.AddDbContext<NinjaHeavenDbContext>(options =>
             {
-                var connectionString = Configuration.GetConnectionString("NinjaHeavenDb");
-
                 if (Environment.IsDevelopment())
                 {
-                    options.UseSqlite(connectionString);
+                    options.UseSqlite(Configuration.GetConnectionString("NinjaHeavenDb"));
                 }
                 else
                 {
-                    options.UseSqlServer(connectionString);
+                    var database = Configuration["DbName"] ?? "NinjaHeavenDb";
+                    var server = Configuration["DbServer"] ?? "localhost";
+                    var port = Configuration["DbPort"] ?? "1433";
+                    var user = Configuration["DbUser"] ?? "SA";
+                    var password = Configuration["DbPassword"] ?? "";
+
+                    options.UseSqlServer($"Server={server}, {port}; Initial Catalog={database};User ID={user}; Password={password};");
                 }
             });
 
@@ -46,7 +51,6 @@ namespace NinjaHeaven
 
             services.AddSession(options =>
             {
-                //options.IdleTimeout = TimeSpan.FromSeconds(10);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
@@ -57,10 +61,12 @@ namespace NinjaHeaven
         {
             if (env.IsDevelopment())
             {
+                DbManagementService.SeedData(app);
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                DbManagementService.MigrationInitialize(app);
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();

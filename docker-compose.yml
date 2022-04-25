@@ -1,0 +1,40 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  mssql-server:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: mssql-server
+    environment:
+        ACCEPT_EULA: "Y"
+        SA_PASSWORD: "P@ssw0rd"
+    ports:
+      - 1433:1433
+    volumes:
+      - type: volume
+        source: NinjaHeavenDb
+        target: /var/opt/mssql
+  ninjaheaven:
+    image: ninjaheaven
+    container_name: ninjaheaven
+    environment: 
+      # ASPNETCORE_ENVIRONMENT: "Development"
+      DbName: "NinjaHeavenDb"
+      DbServer: "mssql-server"
+      DbPort: "1433"
+      DbUser: "SA"
+      DbPassword: "P@ssw0rd"
+    build:
+      dockerfile: NinjaHeaven/Dockerfile
+    ports:
+      - 8000:80
+    volumes:
+      - type: volume
+        source: NinjaHeaven
+        target: /app
+    depends_on: 
+      - mssql-server 
+volumes:
+  NinjaHeavenDb:
+  NinjaHeaven:

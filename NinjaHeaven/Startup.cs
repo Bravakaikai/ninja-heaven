@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using NinjaHeaven.Services;
+using Microsoft.AspNetCore.DataProtection;
+using System.IO;
 
 namespace NinjaHeaven
 {
@@ -28,6 +30,14 @@ namespace NinjaHeaven
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            // To store keys on Volume instead of at the %LOCALAPPDATA% default location
+            var dbPath = @"Server/Keys/DataProtection";
+            var dbDirectory = new DirectoryInfo(dbPath);
+            // 判斷資料夾是否為空
+            if (!Directory.Exists(dbPath) || dbDirectory.GetFiles().Length == 0) {
+                services.AddDataProtection().PersistKeysToFileSystem(dbDirectory);
+            }
 
             services.AddDbContext<NinjaHeavenDbContext>(options =>
             {

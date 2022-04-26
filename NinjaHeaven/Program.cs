@@ -16,11 +16,16 @@ namespace NinjaHeaven
     {
         public static void Main(string[] args)
         {
-            if (!File.Exists(@"public.key") || !File.Exists(@"private.key"))
+            var folderPath = "Server/Keys/Encryption";
+            if (!File.Exists(@$"{folderPath}/public.key") || !File.Exists(@$"{folderPath}/private.key"))
             {
+                if (!Directory.Exists(@$"{folderPath}"))
+                {
+                    Directory.CreateDirectory(@$"{folderPath}");
+                }
                 // RSA Encryption
                 // Generate a key pair
-                ExpressEncription.RSAEncription.MakeKey(@"public.key", @"private.key");
+                ExpressEncription.RSAEncription.MakeKey(@$"{folderPath}/public.key", @$"{folderPath}/private.key");
             }
 
             CreateHostBuilder(args).Build().Run();

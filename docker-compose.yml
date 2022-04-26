@@ -4,7 +4,8 @@ version: '3.4'
 
 services:
   mssql-server:
-    image: "mcr.microsoft.com/mssql/server"
+    # image: mcr.microsoft.com/mssql/server
+    image: bravakaikai/ninjaheaven-db:ninjaheavenhub
     container_name: mssql-server
     environment:
         ACCEPT_EULA: "Y"
@@ -16,7 +17,8 @@ services:
         source: NinjaHeavenDb
         target: /var/opt/mssql
   ninjaheaven:
-    image: ninjaheaven
+    # image: ninjaheaven
+    image: bravakaikai/ninjaheaven:ninjaheavenhub
     container_name: ninjaheaven
     environment: 
       # ASPNETCORE_ENVIRONMENT: "Development"
@@ -33,8 +35,8 @@ services:
       - type: volume
         source: NinjaHeaven
         target: /app
-    depends_on: 
-      - mssql-server 
+    # depends_on: 
+    #   - mssql-server 
 volumes:
   NinjaHeavenDb:
   NinjaHeaven:

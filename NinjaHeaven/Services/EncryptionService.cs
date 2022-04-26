@@ -10,13 +10,13 @@ namespace NinjaHeaven.Services
     {
         public static string Encrypt(String password)
         {
-            var encrypt = ExpressEncription.RSAEncription.EncryptString(password, @"public.key");
+            var encrypt = ExpressEncription.RSAEncription.EncryptString(password, @"Server/Keys/Encryption/public.key");
             return encrypt;
         }
 
         public static string Decrypt(String encryptString)
         {
-            var decrypt = ExpressEncription.RSAEncription.DecryptString(encryptString, @"private.key");
+            var decrypt = ExpressEncription.RSAEncription.DecryptString(encryptString, @"Server/Keys/Encryption/private.key");
             return decrypt;
         }
     }

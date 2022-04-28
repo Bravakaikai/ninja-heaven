@@ -1,13 +1,26 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using NinjaHeaven.Services;
 
 namespace NinjaHeaven.Migrations
 {
-    public partial class SQLServer : Migration
+    public partial class SQL_Server : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "DataProtectionKeys",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FriendlyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Xml = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DataProtectionKeys", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Equipment",
                 columns: table => new
@@ -73,32 +86,6 @@ namespace NinjaHeaven.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Equipment",
-                columns: new[] { "Id", "CreatedDate", "Description", "ImgUrl", "Name", "Price", "UpdatedDate" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(3380), "傷害+1", "https://dotown.maeda-design-room.net/wp-content/uploads/2022/03/other_shuriken.png", "手裡劍", 5, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4050) },
-                    { 2, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4670), "傷害+3", "https://dotown.maeda-design-room.net/wp-content/uploads/2022/01/other_hammer_01.png", "鐵鎚", 10, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4670) },
-                    { 3, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4670), "傷害+5", "https://dotown.maeda-design-room.net/wp-content/uploads/2022/01/other_goldbar_01.png", "狼牙棒", 20, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4670) },
-                    { 4, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4670), "傷害+50，速度+10", "https://dotown.maeda-design-room.net/wp-content/uploads/2022/01/vehicle_tank_01.png", "戰車", 300, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4680) },
-                    { 5, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4680), "速度+50", "https://dotown.maeda-design-room.net/wp-content/uploads/2022/01/other_ufo_01.png", "UFO", 250, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4680) },
-                    { 6, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4680), "體力+5", "https://dotown.maeda-design-room.net/wp-content/uploads/2022/01/food_rice_03.png", "白飯", 10, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4680) },
-                    { 7, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4680), "體力+10", "https://dotown.maeda-design-room.net/wp-content/uploads/2022/01/other_babybottle_01.png", "牛奶", 20, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4680) },
-                    { 8, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4680), "透視+5，魅力+5", "https://dotown.maeda-design-room.net/wp-content/uploads/2022/01/other_glasses_01.png", "透視鏡", 50, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4690) },
-                    { 9, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4690), "親密度+5", "https://dotown.maeda-design-room.net/wp-content/uploads/2022/01/other_lettter_01.png", "信紙", 1, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4690) },
-                    { 10, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4690), "全區喊話", "https://dotown.maeda-design-room.net/wp-content/uploads/2022/01/other_trumpet_01.png", "大聲公", 10, new DateTime(2022, 4, 22, 11, 52, 47, 698, DateTimeKind.Utc).AddTicks(4690) }
-                });
-
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] { "Id", "CreatedDate", "Email", "Gender", "Name", "Password", "Role", "UpdatedDate", "Wallet" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2022, 4, 22, 11, 52, 47, 691, DateTimeKind.Utc).AddTicks(4500), "kelly@gmail.com", "Female", "Kelly", EncryptionService.Encrypt("123456"), "Admin", new DateTime(2022, 4, 22, 11, 52, 47, 691, DateTimeKind.Utc).AddTicks(5320), 1000 },
-                    { 2, new DateTime(2022, 4, 22, 11, 52, 47, 696, DateTimeKind.Utc).AddTicks(2950), "kevin@gmail.com", "Male", "Kevin", EncryptionService.Encrypt("123456"), "Player", new DateTime(2022, 4, 22, 11, 52, 47, 696, DateTimeKind.Utc).AddTicks(2950), 1000 }
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_UserEquipment_UserId",
                 table: "UserEquipment",
@@ -107,6 +94,9 @@ namespace NinjaHeaven.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "DataProtectionKeys");
+
             migrationBuilder.DropTable(
                 name: "UserEquipment");
 

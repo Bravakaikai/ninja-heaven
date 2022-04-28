@@ -34,9 +34,10 @@ services:
     volumes:
       - type: volume
         source: NinjaHeaven
-        target: /app
-    # depends_on: 
-    #   - mssql-server 
+        target: /app/Server
+    depends_on: 
+      - mssql-server
+  
 volumes:
   NinjaHeavenDb:
   NinjaHeaven:

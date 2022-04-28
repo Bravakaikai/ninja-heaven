@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using NinjaHeaven.Services;
 using Microsoft.AspNetCore.DataProtection;
 using System.IO;
 
@@ -31,30 +30,16 @@ namespace NinjaHeaven
         {
             services.AddControllersWithViews();
 
-            // To store keys on Volume instead of at the %LOCALAPPDATA% default location
-            var dbPath = @"Server/Keys/DataProtection";
-            var dbDirectory = new DirectoryInfo(dbPath);
-            // 判斷資料夾是否為空
-            if (!Directory.Exists(dbPath) || dbDirectory.GetFiles().Length == 0) {
-                services.AddDataProtection().PersistKeysToFileSystem(dbDirectory);
-            }
-
             services.AddDbContext<NinjaHeavenDbContext>(options =>
             {
-                if (Environment.IsDevelopment())
-                {
-                    options.UseSqlite(Configuration.GetConnectionString("NinjaHeavenDb"));
-                }
-                else
-                {
-                    var database = Configuration["DbName"] ?? "NinjaHeavenDb";
-                    var server = Configuration["DbServer"] ?? "localhost";
-                    var port = Configuration["DbPort"] ?? "1433";
-                    var user = Configuration["DbUser"] ?? "SA";
-                    var password = Configuration["DbPassword"] ?? "";
+                var database = Configuration["DbName"] ?? "NinjaHeavenDb";
+                var server = Configuration["DbServer"] ?? "localhost";
+                var port = Configuration["DbPort"] ?? "1433";
+                var user = Configuration["DbUser"] ?? "SA";
+                var password = Configuration["DbPassword"] ?? "";
 
-                    options.UseSqlServer($"Server={server}, {port}; Initial Catalog={database};User ID={user}; Password={password};");
-                }
+                options.UseSqlServer($"Server={server}, {port}; Initial Catalog={database};User ID={user}; Password={password};");
+                Console.WriteLine("Connect to database.");
             });
 
             services.AddDistributedMemoryCache();
@@ -64,6 +49,11 @@ namespace NinjaHeaven
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
+            // using Microsoft.AspNetCore.DataProtection;
+            // services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(@"Server/Keys/DataProtection"));
+            services.AddDataProtection().PersistKeysToDbContext<NinjaHeavenDbContext>();
+            Console.WriteLine("Persist keys to DbContext.");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,12 +61,10 @@ namespace NinjaHeaven
         {
             if (env.IsDevelopment())
             {
-                DbManagementService.SeedData(app);
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                DbManagementService.MigrationInitialize(app);
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
